@@ -561,7 +561,7 @@ export default function Home() {
         <section id="about" style={{ marginTop: "2rem" }}>
           <h2>About Me</h2>
           <p>
-            Hi, I'm Moises. This portfolio represents who I am, my interests,
+            Hi, I&apos;m Moises. This portfolio represents who I am, my interests,
             and my creative work. This About Me section is a planned upgrade
             to my personal website.
           </p>
