@@ -44,20 +44,24 @@ import {
   ThemeProvider, // Provides theme to child components
   Toolbar, // Container for app bar content
   Typography, // Text component with different variants
-  useMediaQuery, // Hook to check media queries
 } from "@mui/material";
 
 // Main component for the entire page
 export default function Home() {
   // Check if user's system prefers dark mode
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  // State to track if dark mode is active
+  const [mounted, setMounted] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
 
-  // Update dark mode when system preference changes
   useEffect(() => {
-    setDarkMode(prefersDarkMode);
-  }, [prefersDarkMode]);
+    setMounted(true);
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    setDarkMode(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setDarkMode(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+
+  if (!mounted) return null;
 
   // Create a theme based on dark/light mode preference
   const theme = createTheme({
@@ -327,41 +331,11 @@ export default function Home() {
             <Toolbar sx={{ justifyContent: "space-between" }}>
               {/* Your name/logo */}
               <Typography variant="h6" fontWeight="bold" color="text.primary">
-                <Box component="span" sx={{ color: theme.palette.primary.main }}>John</Box>Doe
+                <Box component="span" sx={{ color: theme.palette.primary.main }}>
+                  Moises
+                </Box>{" "}
+                Escobar
               </Typography>
-              
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                {/* Navigation links - hidden on mobile */}
-                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                  <Button 
-                    onClick={() => scrollToSection('about')} 
-                    color="inherit" 
-                    sx={{ mx: 1 }}
-                  >
-                    About
-                  </Button>
-                  <Button 
-                    onClick={() => scrollToSection('projects')} 
-                    color="inherit" 
-                    sx={{ mx: 1 }}
-                  >
-                    Projects
-                  </Button>
-                  <Button 
-                    onClick={() => scrollToSection('skills')} 
-                    color="inherit" 
-                    sx={{ mx: 1 }}
-                  >
-                    Skills
-                  </Button>
-                  <Button 
-                    onClick={() => scrollToSection('contact')} 
-                    color="inherit" 
-                    sx={{ mx: 1 }}
-                  >
-                    Contact
-                  </Button>
-                </Box>
                 
                 {/* Social media icons */}
                 <Box sx={{ 
@@ -376,7 +350,7 @@ export default function Home() {
                 }}>
                   {/* GitHub link */}
                   <IconButton 
-                    href="https://github.com/johndoe" 
+                    href="https://github.com/moisesescobar" 
                     target="_blank"
                     rel="noopener noreferrer"
                     color="inherit"
@@ -395,7 +369,7 @@ export default function Home() {
                   
                   {/* LinkedIn link */}
                   <IconButton 
-                    href="https://linkedin.com/in/johndoe" 
+                    href="https://linkedin.com/in/moisesescobar" 
                     target="_blank"
                     rel="noopener noreferrer"
                     color="inherit"
@@ -414,7 +388,7 @@ export default function Home() {
                   
                   {/* Twitter link */}
                   <IconButton 
-                    href="https://twitter.com/johndoe" 
+                    href="https://twitter.com/moisesescobar" 
                     target="_blank"
                     rel="noopener noreferrer"
                     color="inherit"
@@ -446,7 +420,6 @@ export default function Home() {
                     {darkMode ? <IoSunny /> : <IoMoon />}
                   </IconButton>
                 </Box>
-              </Box>
             </Toolbar>
           </Container>
         </AppBar>
@@ -500,7 +473,15 @@ export default function Home() {
                   I create sophisticated web applications that deliver exceptional
                   user experiences with modern technologies and clean code.
                 </Typography>
-                <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+                 <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    mt: 3,
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                  }}
+                >
                   <Button
                     onClick={() => scrollToSection('contact')}
                     variant="contained"
@@ -514,6 +495,7 @@ export default function Home() {
                   >
                     Get in Touch
                   </Button>
+
                   <Button
                     onClick={() => scrollToSection('projects')}
                     variant="outlined"
@@ -521,9 +503,24 @@ export default function Home() {
                   >
                     View Work
                   </Button>
-                </Box>
-                <Box sx={{ mt: 2 }}>
-                  <a href="#about">Go to About Me</a>
+
+                  <Button
+                    onClick={() => scrollToSection("about")}
+                    variant="outlined"
+                    sx={{
+                      minWidth: 110,
+                      height: 110,
+                      borderRadius: "50%",
+                      px: 0,
+                      textAlign: "center",
+                      lineHeight: 1.15,
+                      borderWidth: 2,
+                    }}
+                  >
+                    Go to
+                    <br />
+                    About Mii
+                  </Button>
                 </Box>
               </MuiGrid>
               {/* Right side - Profile image */}
@@ -558,14 +555,138 @@ export default function Home() {
           </Container>
         </Box>
 
-        <section id="about" style={{ marginTop: "2rem" }}>
-          <h2>About Me</h2>
-          <p>
-            Hi, I&apos;m Moises. This portfolio represents who I am, my interests,
-            and my creative work. This About Me section is a planned upgrade
-            to my personal website.
-          </p>
-        </section>
+        {/* ===== WII NAVIGATION SECTION ===== */}
+        <Box
+          component="section"
+          sx={{
+            py: 8,
+            px: 2,
+            bgcolor: darkMode ? "#0f2236" : "#eef4fb",
+          }}
+        >
+          <Container maxWidth="lg">
+            <Typography
+              variant="h4"
+              component="h2"
+              sx={{
+                textAlign: "center",
+                fontWeight: 700,
+                mb: 4,
+              }}
+            >
+              Wii Navigation
+            </Typography>
+
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  sm: "repeat(2, 1fr)",
+                },
+                gap: 3,
+                maxWidth: 900,
+                mx: "auto",
+              }}
+            >
+              <Card
+                onClick={() => scrollToSection("about")}
+                sx={{
+                  p: 4,
+                  minHeight: 160,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                  borderRadius: "28px",
+                  boxShadow: 6,
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                  "&:hover": {
+                    transform: "translateY(-6px) scale(1.02)",
+                    boxShadow: 10,
+                  },
+                }}
+              >
+                <Typography variant="h5" fontWeight="bold">
+                  About Mii
+                </Typography>
+              </Card>
+
+              <Card
+                onClick={() => scrollToSection("projects")}
+                sx={{
+                  p: 4,
+                  minHeight: 160,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                  borderRadius: "28px",
+                  boxShadow: 6,
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                  "&:hover": {
+                    transform: "translateY(-6px) scale(1.02)",
+                    boxShadow: 10,
+                  },
+                }}
+              >
+                <Typography variant="h5" fontWeight="bold">
+                  Projects
+                </Typography>
+              </Card>
+
+              <Card
+                onClick={() => scrollToSection("skills")}
+                sx={{
+                  p: 4,
+                  minHeight: 160,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                  borderRadius: "28px",
+                  boxShadow: 6,
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                  "&:hover": {
+                    transform: "translateY(-6px) scale(1.02)",
+                    boxShadow: 10,
+                  },
+                }}
+              >
+                <Typography variant="h5" fontWeight="bold">
+                  Skills
+                </Typography>
+              </Card>
+
+              <Card
+                onClick={() => scrollToSection("contact")}
+                sx={{
+                  p: 4,
+                  minHeight: 160,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                  borderRadius: "28px",
+                  boxShadow: 6,
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                  "&:hover": {
+                    transform: "translateY(-6px) scale(1.02)",
+                    boxShadow: 10,
+                  },
+                }}
+              >
+                <Typography variant="h5" fontWeight="bold">
+                  Contact
+                </Typography>
+              </Card>
+            </Box>
+          </Container>
+        </Box>
 
         {/* ===== ABOUT SECTION ===== */}
         <Box 
@@ -589,7 +710,7 @@ export default function Home() {
               sx={styles.sectionTitle}
               data-aos="fade-up"
             >
-              About Me
+              About Mii
             </Typography>
             <Divider sx={styles.divider} />
             
@@ -610,10 +731,9 @@ export default function Home() {
                 paragraph 
                 sx={{ fontSize: '1.1rem', lineHeight: 1.7 }}
               >
-                With over 5 years of experience in web development, I specialize in creating
-                high-performance, responsive web applications using React, Next.js, and Node.js. My
-                approach combines technical expertise with a strong focus on user experience and clean,
-                maintainable code.
+                Hi, I&apos;m Moises. This portfolio represents who I am, my interests,
+                and my creative work. This About Me section is a planned upgrade
+                to my personal website.
               </Typography>
               <Typography 
                 variant="body1" 
